@@ -8,6 +8,7 @@ import in.twizmwaz.cardinal.event.PlayerChangeTeamEvent;
 import in.twizmwaz.cardinal.event.ScoreUpdateEvent;
 import in.twizmwaz.cardinal.event.TeamNameChangeEvent;
 import in.twizmwaz.cardinal.event.TimeLimitChangeEvent;
+import in.twizmwaz.cardinal.event.PlayerSettingChangeEvent;
 import in.twizmwaz.cardinal.event.objective.ObjectiveCompleteEvent;
 import in.twizmwaz.cardinal.event.objective.ObjectiveProximityEvent;
 import in.twizmwaz.cardinal.event.objective.ObjectiveTouchEvent;
@@ -22,6 +23,7 @@ import in.twizmwaz.cardinal.module.modules.score.ScoreModule;
 import in.twizmwaz.cardinal.module.modules.team.TeamModule;
 import in.twizmwaz.cardinal.module.modules.timeLimit.TimeLimit;
 import in.twizmwaz.cardinal.module.modules.wools.WoolObjective;
+import in.twizmwaz.cardinal.settings.Settings;
 import in.twizmwaz.cardinal.util.MiscUtil;
 import in.twizmwaz.cardinal.util.Scoreboards;
 import in.twizmwaz.cardinal.util.Strings;
@@ -46,7 +48,7 @@ import java.util.List;
 public class ScoreboardModule implements Module {
 
     private TeamModule team, prioritized;
-    private Scoreboard scoreboard;
+    private Scoreboard scoreboard, emptyScoreboard;
     private List<TeamModule> sortedTeams;
 
     private Objective objective;
@@ -58,6 +60,7 @@ public class ScoreboardModule implements Module {
         this.prioritized = team.isObserver() ? null : team;
         this.sortedTeams = Teams.getTeams();
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        this.emptyScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         for (TeamModule teams : Teams.getTeams()) {
             Team prefixTeam = scoreboard.registerNewTeam(teams.getId());
             prefixTeam.setPrefix(teams.getColor() + "");
@@ -127,13 +130,21 @@ public class ScoreboardModule implements Module {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChangeTeam(PlayerChangeTeamEvent event) {
         if (!event.isCancelled()) {
+            Bukkit.broadcastMessage("TeamSwitchEvent");
             if (event.getNewTeam().orNull() == this.team) {
-                event.getPlayer().setScoreboard(this.scoreboard);
+                if (Settings.getSettingByName("Scoreboard") != null && Settings.getSettingByName("Scoreboard").getValueByPlayer(event.getPlayer()).getValue().equalsIgnoreCase("on")) {
+                    event.getPlayer().setScoreboard(this.scoreboard);
+                } else {
+                    Bukkit.broadcastMessage("Empty Scoreboard Set");
+                    event.getPlayer().setScoreboard(this.emptyScoreboard);
+                }
             }
             for (TeamModule team : Teams.getTeams()) {
+                Bukkit.broadcastMessage(team.getName() + " team removed.");
                 remove(team, event.getPlayer());
             }
             if (event.getNewTeam().isPresent()) {
+                Bukkit.broadcastMessage("Present " + team.getName());
                 add(event.getNewTeam().get(), event.getPlayer());
             }
             if (Blitz.matchIsBlitz()) {
@@ -349,7 +360,7 @@ public class ScoreboardModule implements Module {
             if (slots != 0) {
                 slots++;
             }
-            slots += (Teams.getTeams().size() - 1);
+        slots += (Teams.getTeams().size() - 1);
         if (Scoreboards.getHills().size() > 0) {
             if (slots != 0) {
                 slots++;
@@ -579,4 +590,32 @@ public class ScoreboardModule implements Module {
             currentScore++;
         }
     }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void PlayerSettingChangeEvent(PlayerSettingChangeEvent event) {
+        if (!event.getSetting().equals(Settings.getSettingByName("Scoreboard"))) return;
+        if (Teams.getTeamByPlayer(event.getPlayer()).orNull() == this.team) {
+            if (Settings.getSettingByName("Scoreboard").getValueByPlayer(event.getPlayer()).getValue().equalsIgnoreCase("off")) {
+                Bukkit.broadcastMessage("EmptyScoreboard Set");
+
+                /*
+                for (TeamModule team : Teams.getTeams()) {
+                   remove(team, event.getPlayer());
+                }
+                if (Teams.getTeamByPlayer(event.getPlayer()).isPresent()) {
+                  add(Teams.getTeamByPlayer(event.getPlayer()).get(), event.getPlayer());
+                }
+                */
+
+                event.getPlayer().setScoreboard(this.emptyScoreboard);
+            } else {
+                Bukkit.broadcastMessage("Team Scoreboard Set");
+                event.getPlayer().setScoreboard(this.scoreboard);
+            }
+        }
+    }
+
+
+
+
 }
