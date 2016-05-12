@@ -20,11 +20,14 @@ import in.twizmwaz.cardinal.module.modules.kit.kitTypes.KitItem;
 import in.twizmwaz.cardinal.module.modules.kit.kitTypes.KnockbackReductionKit;
 import in.twizmwaz.cardinal.module.modules.kit.kitTypes.PotionKit;
 import in.twizmwaz.cardinal.module.modules.kit.kitTypes.WalkSpeedKit;
+import in.twizmwaz.cardinal.module.modules.kit.kitTypes.HeadKit;
 import in.twizmwaz.cardinal.util.ArmorType;
 import in.twizmwaz.cardinal.util.Numbers;
 import in.twizmwaz.cardinal.util.Parser;
 import in.twizmwaz.cardinal.util.Strings;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Skin;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -135,6 +138,15 @@ public class KitBuilder implements ModuleBuilder {
                 Boolean flying = jump.getAttributeValue("flying") != null ? Numbers.parseBoolean(jump.getAttributeValue("flying"), false) : null;
                 float flySpeed = Float.parseFloat(jump.getAttributeValue("fly-speed", "1")) / 10F;
                 kits.add(new FlyKit(canFly, flying, flySpeed));
+            }
+
+            Bukkit.broadcastMessage("Head TIME");
+            for (Element head : element.getChildren("head")) {
+                String displayName = head.getAttributeValue("name");
+                UUID uuid = UUID.fromString(head.getAttributeValue("uuid"));
+                String skin = head.getChildText("skin");
+                Bukkit.broadcastMessage("New Head: " + displayName + ", " + uuid + ", " + skin + ".");
+                kits.add(new HeadKit(displayName, uuid, skin));
             }
 
             String filter = element.getAttributeValue("filter", "always");
