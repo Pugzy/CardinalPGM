@@ -19,6 +19,7 @@ import in.twizmwaz.cardinal.module.modules.spawn.SpawnModule;
 import in.twizmwaz.cardinal.module.modules.team.TeamModule;
 import in.twizmwaz.cardinal.module.modules.titleRespawn.TitleRespawn;
 import in.twizmwaz.cardinal.rank.Rank;
+import in.twizmwaz.cardinal.settings.Settings;
 import in.twizmwaz.cardinal.util.Items;
 import in.twizmwaz.cardinal.util.Players;
 import in.twizmwaz.cardinal.util.Teams;
@@ -222,6 +223,7 @@ public class ObserverModule implements Module {
                 viewing.put(uuid, viewingList);
             }
         }
+        stickyInventory(event.getActor().getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -251,6 +253,7 @@ public class ObserverModule implements Module {
 
     @EventHandler
     public void onViewingPlayerDropItem(PlayerDropItemEvent event) {
+        stickyInventory(event.getPlayer());
         refreshView(event.getPlayer().getUniqueId());
     }
 
@@ -422,6 +425,15 @@ public class ObserverModule implements Module {
             inventory.setItem(i, player.getInventory().getItem(i));
         }
         return inventory;
+    }
+
+    public void stickyInventory(Player player) {
+        if (testObserverOrDead(player)) {
+            if (Settings.getSettingByName("StickyInventory") != null && Settings.getSettingByName("StickyInventory").getValueByPlayer(event.getActor()).getValue().equalsIgnoreCase("on")) {
+
+                RespawnModule.giveObserversKit(player);
+            }
+        }
     }
 
     @EventHandler

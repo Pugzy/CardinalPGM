@@ -11,6 +11,7 @@ settings:
 - PrivateMessageSounds
 - Scoreboard
 - Sounds
+- StickyInventory
 setting:
   AttackSpeedometer:
     aliases:
@@ -91,3 +92,8 @@ setting:
     - 'off'
     - on[default]
     description: Hear sounds to alert you of the last three seconds of a countdown
+  StickyInventory:
+    values:
+    - 'off'
+    - on[default]
+    description: Prevents inventory editing whilst in observers
