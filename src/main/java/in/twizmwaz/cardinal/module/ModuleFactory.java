@@ -13,6 +13,8 @@ import in.twizmwaz.cardinal.module.modules.chat.ChatModuleBuilder;
 import in.twizmwaz.cardinal.module.modules.chatChannels.ChatChannelModuleBuilder;
 import in.twizmwaz.cardinal.module.modules.classModule.ClassModuleBuilder;
 import in.twizmwaz.cardinal.module.modules.cores.CoreObjectiveBuilder;
+import in.twizmwaz.cardinal.module.modules.customChests.CustomChest;
+import in.twizmwaz.cardinal.module.modules.customChests.CustomChestBuilder;
 import in.twizmwaz.cardinal.module.modules.cycleTimer.CycleTimerModuleBuilder;
 import in.twizmwaz.cardinal.module.modules.damageIndicator.DamageIndicatorBuilder;
 import in.twizmwaz.cardinal.module.modules.deathMessages.DeathMessagesBuilder;
@@ -173,7 +175,8 @@ public class ModuleFactory {
                 MultitradeBuilder.class,
                 AttackSpeedBuilder.class,
                 DamageIndicatorBuilder.class,
-                ItemModsBuilder.class
+                ItemModsBuilder.class,
+                CustomChestBuilder.class
         ));
     }
 
