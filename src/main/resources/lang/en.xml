@@ -321,6 +321,7 @@
         <cyclingTimer>Cycling to {0} in {1}</cyclingTimer>
         <cycledTo>Cycled to {0}</cycledTo>
         <matchStartingIn>Match starting in {0}</matchStartingIn>
+        <huddleEndingIn>Team huddle end in {0}</huddleEndingIn>
         <serverRestartingIn>Server restarting in {0}</serverRestartingIn>
         <tntDefuser>TNT Defuser</tntDefuser>
         <tntRadiusDefuser>Right-click to defuse TNT in a 5-block radius</tntRadiusDefuser>

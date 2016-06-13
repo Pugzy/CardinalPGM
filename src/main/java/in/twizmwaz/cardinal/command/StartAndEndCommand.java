@@ -18,14 +18,17 @@ import org.bukkit.command.CommandSender;
 
 public class StartAndEndCommand {
     private static int timer;
+    private static int huddle;
     private static boolean waiting = false;
 
-    @Command(aliases = {"start", "begin"}, desc = "Starts the match.", usage = "[time]", flags = "f")
+    @Command(aliases = {"start", "begin"}, desc = "Starts the match.", usage = "[countdown time] [huddle time]", flags = "f")
     @CommandPermissions("cardinal.match.start")
     public static void start(CommandContext cmd, CommandSender sender) throws CommandException {
         if (GameHandler.getGameHandler().getMatch().getState().equals(MatchState.WAITING)) {
             int time = 600;
+            int huddle = 600;
             if (cmd.argsLength() > 0) time = cmd.getInteger(0) * 20;
+            if (cmd.argsLength() > 0) huddle = cmd.getInteger(1) * 20;
             GameHandler.getGameHandler().getMatch().start(time, cmd.hasFlag('f'));
         } else if (GameHandler.getGameHandler().getMatch().getState().equals(MatchState.STARTING)) {
             GameHandler.getGameHandler().getMatch().getModules().getModule(StartTimer.class).setTime(cmd.argsLength() > 0 ? cmd.getInteger(0) * 20 : 30 * 20);

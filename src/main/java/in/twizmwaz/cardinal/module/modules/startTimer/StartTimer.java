@@ -30,11 +30,10 @@ import org.bukkit.event.HandlerList;
 
 public class StartTimer implements TaskedModule, Cancellable {
 
-    private int time, originalTime;
+    private int time, originalTime, huddle, originalHuddle;
     private Match match;
     private boolean cancelled, forced;
-    private String bossBar;
-    private String neededPlayers;
+    private String bossBar, neededPlayers, huddleBar;
 
     public StartTimer(Match match, int ticks) {
         this.time = ticks;
@@ -42,6 +41,7 @@ public class StartTimer implements TaskedModule, Cancellable {
         this.match = match;
         this.cancelled = true;
         this.bossBar = BossBars.addBroadcastedBossBar(new UnlocalizedChatMessage(""), BarColor.GREEN, BarStyle.SOLID, false);
+        this.huddleBar = BossBars.addBroadcastedBossBar(new UnlocalizedChatMessage(""), BarColor.YELLOW, BarStyle.SOLID, false);
         this.neededPlayers = BossBars.addBroadcastedBossBar(new UnlocalizedChatMessage(""), BarColor.RED, BarStyle.SOLID, false);
     }
 
@@ -90,9 +90,18 @@ public class StartTimer implements TaskedModule, Cancellable {
                 }
                 BossBars.removeBroadcastedBossBar(bossBar);
                 BossBars.removeBroadcastedBossBar(neededPlayers);
-                match.setState(MatchState.PLAYING);
-                ChatUtil.getGlobalChannel().sendLocalizedMessage(new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_STARTED)));
-                Bukkit.getServer().getPluginManager().callEvent(new MatchStartEvent());
+
+                if (this.huddle > 0) {
+                    int intHuddleTime = (huddle / 20);
+                    match.setState(MatchState.HUDDLE);
+                    BossBars.setProgress(huddleBar, (double)huddle / originalHuddle);
+                    BossBars.setTitle(bossBar, getHuddleTimerMessage(intHuddleTime));
+
+                } else {
+                    match.setState(MatchState.PLAYING);
+                    ChatUtil.getGlobalChannel().sendLocalizedMessage(new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_STARTED)));
+                    Bukkit.getServer().getPluginManager().callEvent(new MatchStartEvent());
+                }
             }
         }
         if (time < 0) {
@@ -132,13 +141,19 @@ public class StartTimer implements TaskedModule, Cancellable {
         updateNeededPlayers(neededPlayers() > 0);
     }
 
-    public void setTime(int time) {
+    public void setTime(int time, int huddle) {
         this.time = time;
         setOriginalTime(time);
+        this.huddle = huddle;
+        setOriginalHuddleTime(huddle);
     }
 
     public void setOriginalTime(int time) {
         this.originalTime = time;
+    }
+
+    public void setOriginalHuddleTime(int huddle) {
+        this.originalHuddle = huddle;
     }
 
     public void setForced(boolean forced) {
@@ -147,6 +162,10 @@ public class StartTimer implements TaskedModule, Cancellable {
 
     private static ChatMessage getStartTimerMessage(int time) {
         return new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_STARTING_IN, new LocalizedChatMessage(time == 1 ? ChatConstant.UI_SECOND : ChatConstant.UI_SECONDS, ChatColor.DARK_RED + "" + time + ChatColor.GREEN)));
+    }
+
+    private static ChatMessage getHuddleTimerMessage(int time) {
+        return new UnlocalizedChatMessage(ChatColor.YELLOW + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_HUDDLE_END_IN, new LocalizedChatMessage(time == 1 ? ChatConstant.UI_SECOND : ChatConstant.UI_SECONDS, ChatColor.DARK_RED + "" + time + ChatColor.YELLOW)));
     }
 
     public int neededPlayers(){

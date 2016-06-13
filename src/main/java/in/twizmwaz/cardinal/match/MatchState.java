@@ -4,6 +4,7 @@ public enum MatchState {
 
     WAITING(),
     STARTING(),
+    HUDDLE(),
     PLAYING(),
     ENDED(),
     CYCLING();
@@ -14,6 +15,8 @@ public enum MatchState {
                 return "Waiting";
             case STARTING:
                 return "Starting";
+            case HUDDLE:
+                return "Huddle";
             case PLAYING:
                 return "Playing";
             case ENDED:
