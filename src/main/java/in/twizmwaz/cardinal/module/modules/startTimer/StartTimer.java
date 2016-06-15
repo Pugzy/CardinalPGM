@@ -11,7 +11,6 @@ import in.twizmwaz.cardinal.match.Match;
 import in.twizmwaz.cardinal.match.MatchState;
 import in.twizmwaz.cardinal.module.TaskedModule;
 import in.twizmwaz.cardinal.module.modules.team.TeamModule;
-import in.twizmwaz.cardinal.settings.Settings;
 import in.twizmwaz.cardinal.util.ChatUtil;
 import in.twizmwaz.cardinal.util.Players;
 import in.twizmwaz.cardinal.util.Teams;
@@ -32,9 +31,8 @@ public class StartTimer implements TaskedModule, Cancellable {
 
     private int time, originalTime;
     private Match match;
-    private boolean cancelled, forced;
-    private String bossBar;
-    private String neededPlayers;
+    private boolean cancelled, forced, hasHuddle;
+    private String bossBar, neededPlayers;
 
     public StartTimer(Match match, int ticks) {
         this.time = ticks;
@@ -64,9 +62,11 @@ public class StartTimer implements TaskedModule, Cancellable {
                 BossBars.setTitle(bossBar, getStartTimerMessage(intTime));
                 if (intTime <= 3) {
                     Players.broadcastSoundEffect(Sound.BLOCK_NOTE_PLING, 1, 1);
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (!Teams.getTeamByPlayer(player).get().isObserver()) {
-                            player.showTitle(new TextComponent(ChatColor.YELLOW + "" + intTime), new TextComponent(""), 0, 5, 15);
+                    if (!this.hasHuddle) {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            if (!Teams.getTeamByPlayer(player).get().isObserver()) {
+                                player.showTitle(new TextComponent(ChatColor.YELLOW + "" + intTime), new TextComponent(""), 0, 5, 15);
+                            }
                         }
                     }
                 }
@@ -81,18 +81,22 @@ public class StartTimer implements TaskedModule, Cancellable {
                         }
                     }
                 }
-                Players.broadcastSoundEffect(Sound.BLOCK_NOTE_PLING, 1, 2);
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (!Teams.getTeamByPlayer(player).get().isObserver()) {
-                        String title = new LocalizedChatMessage(ChatConstant.UI_MATCH_START_TITLE).getMessage(player.getLocale());
-                        player.showTitle(new TextComponent(ChatColor.GREEN + title), new TextComponent(""), 0, 5, 15);
-                    }
-                }
                 BossBars.removeBroadcastedBossBar(bossBar);
                 BossBars.removeBroadcastedBossBar(neededPlayers);
-                match.setState(MatchState.PLAYING);
-                ChatUtil.getGlobalChannel().sendLocalizedMessage(new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_STARTED)));
-                Bukkit.getServer().getPluginManager().callEvent(new MatchStartEvent());
+                if (this.hasHuddle) {
+                    GameHandler.getGameHandler().getMatch().startHuddle();
+                } else {
+                    match.setState(MatchState.PLAYING);
+                    ChatUtil.getGlobalChannel().sendLocalizedMessage(new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_STARTED)));
+                    Bukkit.getServer().getPluginManager().callEvent(new MatchStartEvent());
+                    Players.broadcastSoundEffect(Sound.BLOCK_NOTE_PLING, 1, 2);
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (!Teams.getTeamByPlayer(player).get().isObserver()) {
+                            String title = new LocalizedChatMessage(ChatConstant.UI_MATCH_START_TITLE).getMessage(player.getLocale());
+                            player.showTitle(new TextComponent(ChatColor.GREEN + title), new TextComponent(""), 0, 5, 15);
+                        }
+                    }
+                }
             }
         }
         if (time < 0) {
@@ -130,6 +134,15 @@ public class StartTimer implements TaskedModule, Cancellable {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerChangeTeam(PlayerChangeTeamEvent event) {
         updateNeededPlayers(neededPlayers() > 0);
+    }
+
+
+    public void setHuddle(boolean huddle) {
+        this.hasHuddle = huddle;
+    }
+
+    public boolean getHuddle() {
+        return this.hasHuddle;
     }
 
     public void setTime(int time) {

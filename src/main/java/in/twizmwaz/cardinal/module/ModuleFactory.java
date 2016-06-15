@@ -32,6 +32,7 @@ import in.twizmwaz.cardinal.module.modules.gamerules.GamerulesBuilder;
 import in.twizmwaz.cardinal.module.modules.guiKeep.GuiKeepModuleBuilder;
 import in.twizmwaz.cardinal.module.modules.header.HeaderModuleBuilder;
 import in.twizmwaz.cardinal.module.modules.hill.HillObjectiveBuilder;
+import in.twizmwaz.cardinal.module.modules.huddleTimer.HuddleTimerBuilder;
 import in.twizmwaz.cardinal.module.modules.hunger.HungerBuilder;
 import in.twizmwaz.cardinal.module.modules.invisibleBlock.InvisibleBlockBuilder;
 import in.twizmwaz.cardinal.module.modules.itemKeep.ItemKeepBuilder;
@@ -185,7 +186,8 @@ public class ModuleFactory {
                 PostBuilder.class,
                 FlagBuilder.class,
                 NetBuilder.class,
-                StatsBuilder.class
+                StatsBuilder.class,
+                HuddleTimerBuilder.class
         ));
     }
 

@@ -324,6 +324,8 @@ public enum ChatConstant {
     UI_CYCLING_TIMER("userInterface.cyclingTimer"),
     UI_CYCLED_TO("userInterface.cycledTo"),
     UI_MATCH_STARTING_IN("userInterface.matchStartingIn"),
+    UI_MATCH_HUDDLE_END_IN("userInterface.huddleEndingIn"),
+    UI_MATCH_HUDDLE_STRATIGIZE("userInterface.huddleStrategizeTime"),
     UI_SERVER_RESTARTING_IN("userInterface.serverRestartingIn"),
     UI_TNT_DEFUSER("userInterface.tntDefuser"),
     UI_RATE_MAP("userInterface.rateMap"),

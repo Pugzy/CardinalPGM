@@ -7,6 +7,7 @@ import in.twizmwaz.cardinal.event.MatchEndEvent;
 import in.twizmwaz.cardinal.module.Module;
 import in.twizmwaz.cardinal.module.ModuleCollection;
 import in.twizmwaz.cardinal.module.ModuleLoadTime;
+import in.twizmwaz.cardinal.module.modules.huddleTimer.HuddleTimer;
 import in.twizmwaz.cardinal.module.modules.startTimer.StartTimer;
 import in.twizmwaz.cardinal.module.modules.team.TeamModule;
 import in.twizmwaz.cardinal.rotation.LoadedMap;
@@ -97,8 +98,20 @@ public class Match {
             StartTimer startTimer = getModules().getModule(StartTimer.class);
             startTimer.setTime(time);
             startTimer.setForced(forced);
+            startTimer.setHuddle(getModules().getModule(HuddleTimer.class).getTime() != 0);
+            Bukkit.broadcastMessage("Match> Time: " + getModules().getModule(HuddleTimer.class).getTime());
+            Bukkit.broadcastMessage("Match> Huddle: " + getModules().getModule(StartTimer.class).getHuddle());
             startTimer.setCancelled(false);
             state = MatchState.STARTING;
+        }
+    }
+
+    public void startHuddle() {
+        if (state == MatchState.STARTING) {
+            Bukkit.broadcastMessage("Match> Huddle: " + getModules().getModule(HuddleTimer.class).getTime());
+            HuddleTimer huddleTimer = getModules().getModule(HuddleTimer.class);
+            huddleTimer.setCancelled(false);
+            state = MatchState.HUDDLE;
         }
     }
 

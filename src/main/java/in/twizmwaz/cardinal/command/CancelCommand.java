@@ -9,6 +9,7 @@ import in.twizmwaz.cardinal.chat.LocalizedChatMessage;
 import in.twizmwaz.cardinal.chat.UnlocalizedChatMessage;
 import in.twizmwaz.cardinal.match.MatchState;
 import in.twizmwaz.cardinal.module.modules.cycleTimer.CycleTimerModule;
+import in.twizmwaz.cardinal.module.modules.huddleTimer.HuddleTimer;
 import in.twizmwaz.cardinal.module.modules.startTimer.StartTimer;
 import in.twizmwaz.cardinal.util.ChatUtil;
 import org.bukkit.ChatColor;
@@ -26,7 +27,10 @@ public class CancelCommand {
         if (!handler.getMatch().getModules().getModule(StartTimer.class).isCancelled()) {
             handler.getMatch().getModules().getModule(StartTimer.class).setCancelled(true);
         }
-        if (handler.getMatch().getState().equals(MatchState.STARTING)) {
+        if (!handler.getMatch().getModules().getModule(HuddleTimer.class).isCancelled()) {
+            handler.getMatch().getModules().getModule(HuddleTimer.class).setCancelled(true);
+        }
+        if (handler.getMatch().getState().equals(MatchState.STARTING) || handler.getMatch().getState().equals(MatchState.HUDDLE)) {
             handler.getMatch().setState(MatchState.WAITING);
         } else if (handler.getMatch().getState().equals(MatchState.CYCLING)) {
             handler.getMatch().setState(MatchState.ENDED);
