@@ -1,6 +1,7 @@
 package in.twizmwaz.cardinal.util;
 
 import com.google.common.collect.Lists;
+import in.twizmwaz.cardinal.Cardinal;
 import in.twizmwaz.cardinal.GameHandler;
 import in.twizmwaz.cardinal.module.modules.itemMods.ItemMods;
 import in.twizmwaz.cardinal.module.modules.kit.kitTypes.KitItem;
@@ -9,6 +10,7 @@ import net.minecraft.server.MobEffectList;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -118,6 +120,11 @@ public class Parser {
             bookMeta.setPages(pages);
         }
         itemStack.setItemMeta(meta);
+        if (element.getAttribute("projectile") != null) {
+            Bukkit.broadcastMessage("Projectile name added " + element.getAttributeValue("projectile"));
+            NMS.getItemNBT(itemStack).setString("projectile", element.getAttributeValue("projectile"));
+            Bukkit.broadcastMessage("Data: " + NMS.getItemNBT(itemStack).getString("projectile"));
+        }
         return GameHandler.getGameHandler().getMatch().getModules().getModule(ItemMods.class).applyRules(applyMeta(itemStack, element));
     }
 

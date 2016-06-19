@@ -18,6 +18,7 @@ import in.twizmwaz.cardinal.module.modules.craftingModule.CraftingModuleBuilder;
 import in.twizmwaz.cardinal.module.modules.ctf.FlagBuilder;
 import in.twizmwaz.cardinal.module.modules.ctf.net.NetBuilder;
 import in.twizmwaz.cardinal.module.modules.ctf.post.PostBuilder;
+import in.twizmwaz.cardinal.module.modules.customProjectiles.CustomProjectilesBuilder;
 import in.twizmwaz.cardinal.module.modules.cycleTimer.CycleTimerModuleBuilder;
 import in.twizmwaz.cardinal.module.modules.damageIndicator.DamageIndicatorBuilder;
 import in.twizmwaz.cardinal.module.modules.deathMessages.DeathMessagesBuilder;
@@ -191,7 +192,8 @@ public class ModuleFactory {
                 StatsBuilder.class,
                 FallingBlocksBuilder.class,
                 SpectatorToolsBuilder.class,
-                ArrowModuleBuilder.class
+                ArrowModuleBuilder.class,
+                CustomProjectilesBuilder.class
         ));
     }
 
