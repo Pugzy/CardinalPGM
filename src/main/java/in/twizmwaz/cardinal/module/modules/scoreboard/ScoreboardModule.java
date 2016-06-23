@@ -63,6 +63,9 @@ public class ScoreboardModule implements Module {
             Team prefixTeam = scoreboard.registerNewTeam(teams.getId());
             prefixTeam.setPrefix(teams.getColor() + "");
             prefixTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+            if (!team.isObserver()) {
+                prefixTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, teams.getNameVisibility());
+            }
             if (!teams.isObserver()) {
                 scoreboard.registerNewTeam(teams.getId() + "-t");
             }

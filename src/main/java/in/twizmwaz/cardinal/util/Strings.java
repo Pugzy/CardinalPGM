@@ -1,6 +1,7 @@
 package in.twizmwaz.cardinal.util;
 
 import org.bukkit.ChatColor;
+import org.bukkit.scoreboard.Team;
 import org.bukkit.util.ChatPaginator;
 
 import java.text.DecimalFormat;
@@ -162,4 +163,19 @@ public class Strings {
         }
         return color;
     }
+
+    public static Team.OptionStatus parseOptionStatus(String string) {
+        switch (string.toLowerCase()) {
+            case "true":
+                return Team.OptionStatus.ALWAYS;
+            case "false":
+                return Team.OptionStatus.NEVER;
+            case "allies":
+                return Team.OptionStatus.FOR_OWN_TEAM;
+            case "enemies":
+                return Team.OptionStatus.FOR_OTHER_TEAMS;
+        }
+        return Team.OptionStatus.ALWAYS;
+    }
+
 }

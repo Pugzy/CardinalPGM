@@ -7,8 +7,10 @@ import in.twizmwaz.cardinal.module.ModuleCollection;
 import in.twizmwaz.cardinal.module.ModuleLoadTime;
 import in.twizmwaz.cardinal.util.Numbers;
 import in.twizmwaz.cardinal.util.Parser;
+import in.twizmwaz.cardinal.util.Strings;
 import org.apache.logging.log4j.core.helpers.Integers;
 import org.bukkit.ChatColor;
+import org.bukkit.scoreboard.Team;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -49,9 +51,10 @@ public class TeamModuleBuilder implements ModuleBuilder {
             if (teamNode.getAttributeValue("plural") != null)
                 plural = Numbers.parseBoolean(teamNode.getAttributeValue("plural"));
             ChatColor color = Parser.parseChatColor(teamNode.getAttribute("color").getValue());
-            results.add(new TeamModule(match, name, id, min, max, maxOverfill, respawnLimit, color, plural, false));
+            Team.OptionStatus nameVisibility = teamNode.getAttributeValue("show-name-tags") == null ? Team.OptionStatus.ALWAYS : Strings.parseOptionStatus(teamNode.getAttributeValue("show-name-tags"));
+            results.add(new TeamModule(match, name, id, min, max, maxOverfill, respawnLimit, color, plural, nameVisibility, false));
         }
-        results.add(new TeamModule(match, "Observers", "observers", 0, Integer.MAX_VALUE, Integer.MAX_VALUE, -1, ChatColor.AQUA, true, true));
+        results.add(new TeamModule(match, "Observers", "observers", 0, Integer.MAX_VALUE, Integer.MAX_VALUE, -1, ChatColor.AQUA, true, Team.OptionStatus.ALWAYS, true));
         return results;
     }
 }

@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
+import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 
@@ -33,8 +34,9 @@ public class TeamModule<P extends Player> extends ArrayList<Player> implements M
     private ChatColor color;
     private boolean plural;
     private boolean ready;
+    private Team.OptionStatus nameVisibility;
 
-    protected TeamModule(Match match, String name, String id, int min, int max, int maxOverfill, int respawnLimit, ChatColor color, boolean plural, boolean observer) {
+    protected TeamModule(Match match, String name, String id, int min, int max, int maxOverfill, int respawnLimit, ChatColor color, boolean plural, Team.OptionStatus nameVisibility, boolean observer) {
         this.match = match;
         this.name = name;
         this.id = id;
@@ -46,6 +48,7 @@ public class TeamModule<P extends Player> extends ArrayList<Player> implements M
         this.plural = plural;
         this.observer = observer;
         this.ready = false;
+        this.nameVisibility = nameVisibility;
     }
 
     public boolean add(Player player, boolean force, boolean message) {
@@ -150,6 +153,18 @@ public class TeamModule<P extends Player> extends ArrayList<Player> implements M
 
     public boolean isPlural() {
         return plural;
+    }
+
+    public void setPlural(boolean plural) {
+        this.plural = plural;
+    }
+
+    public Team.OptionStatus getNameVisibility() {
+        return nameVisibility;
+    }
+
+    public void setNameVisibility(Team.OptionStatus nameVisibility) {
+        this.nameVisibility = nameVisibility;
     }
 
     public boolean isObserver() {
