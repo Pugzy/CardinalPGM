@@ -48,6 +48,7 @@ import in.twizmwaz.cardinal.module.modules.monumentModes.MonumentModesBuilder;
 import in.twizmwaz.cardinal.module.modules.motd.MOTDBuilder;
 import in.twizmwaz.cardinal.module.modules.multitrade.MultitradeBuilder;
 import in.twizmwaz.cardinal.module.modules.observers.ObserverModuleBuilder;
+import in.twizmwaz.cardinal.module.modules.payload.PayloadObjectiveBuilder;
 import in.twizmwaz.cardinal.module.modules.permissions.PermissionModuleBuilder;
 import in.twizmwaz.cardinal.module.modules.playable.PlayableBuilder;
 import in.twizmwaz.cardinal.module.modules.portal.PortalBuilder;
@@ -185,7 +186,8 @@ public class ModuleFactory {
                 PostBuilder.class,
                 FlagBuilder.class,
                 NetBuilder.class,
-                StatsBuilder.class
+                StatsBuilder.class,
+                PayloadObjectiveBuilder.class
         ));
     }
 

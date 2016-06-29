@@ -6,6 +6,7 @@ import in.twizmwaz.cardinal.module.modules.cores.CoreObjective;
 import in.twizmwaz.cardinal.module.modules.ctf.FlagObjective;
 import in.twizmwaz.cardinal.module.modules.destroyable.DestroyableObjective;
 import in.twizmwaz.cardinal.module.modules.hill.HillObjective;
+import in.twizmwaz.cardinal.module.modules.payload.PayloadObjective;
 import in.twizmwaz.cardinal.module.modules.team.TeamModule;
 import in.twizmwaz.cardinal.module.modules.wools.WoolObjective;
 import in.twizmwaz.cardinal.util.MiscUtil;
@@ -121,6 +122,10 @@ public class GameObjectiveScoreboardHandler {
                 prefix = teamColor + " \u2794 ";
             }
             prefix = prefix + proximity2;
+        } else if (objective instanceof PayloadObjective) {
+            PayloadObjective payloadObjective = (PayloadObjective) objective;
+            ChatColor color = ChatColor.WHITE;
+            prefix = color + " \u25C0\u25cF\u25B6";
         } else {
             prefix = " ";
         }
